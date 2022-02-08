@@ -1,7 +1,7 @@
 const logger = require('helpers/logger')
-const db = require('controllers/auth/module/db')
-const validate = require('controllers/auth/module/validate')
-const ctrl = require('controllers/auth/auth.ctrl')
+const db = require('controllers/user/module/db')
+const validate = require('controllers/user/module/validate')
+const ctrl = require('controllers/user/user.ctrl')
 // const func = require('controllers/auth/auth.func')
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
       })
       return res.json(result)
     } catch (err) {
-      logger.error(err.message, err.stack)
+      logger.error(err)
       return res.json({ msg: err.message })
     }
   },

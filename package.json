@@ -20,6 +20,7 @@
   "homepage": "https://github.com/martzing/amuletmhs-backend#readme",
   "dependencies": {
     "app-module-path": "^2.2.0",
+    "body-parser": "^1.19.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "got": "^12.0.1",

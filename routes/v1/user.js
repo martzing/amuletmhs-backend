@@ -1,9 +1,9 @@
-const adapter = require('controllers/auth/auth.api')
+const adapter = require('controllers/user/user.api')
 
 module.exports = [
   {
     method: 'GET',
-    path: '/login',
+    path: '/',
     handler: adapter.getUsers,
   },
 ]

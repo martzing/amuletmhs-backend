@@ -3,8 +3,7 @@ const morgan = require('morgan')
 const logger = require('helpers/logger')
 
 module.exports = (app) => {
-  const customFormat = `:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :response-time ms :res[content-length] ":referrer" ":user-agent"`
-  const format = customFormat || 'combined'
+  const format = 'combined'
   const opts = {
     stream: {
       write: (message) =>
