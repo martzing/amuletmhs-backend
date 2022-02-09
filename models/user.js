@@ -48,12 +48,12 @@ module.exports = (sequelize, DataType) => {
   User.associate = (models) => {
     models.User.hasMany(models.Board, { foreignKey: 'user_id' })
     models.User.hasMany(models.BoardItemList, { foreignKey: 'user_id' })
-    // models.User.hasMany(models.DividendTransaction, { foreignKey: 'user_id' })
-    // models.User.hasMany(models.DividendTransaction, { as: 'DividendTransaction2', foreignKey: 'to_user_id' })
-    // models.User.hasMany(models.InvestmentFundTransaction, { foreignKey: 'user_id' })
-    // models.User.hasMany(models.InvestmentFundTransaction, { as: 'InvestmentFundTransaction2', foreignKey: 'from_user_id' })
-    // models.User.hasMany(models.PurchaseOrder, { foreignKey: 'user_id' })
-    // models.User.hasMany(models.UtilityPayment, { foreignKey: 'user_id' })
+    models.User.hasMany(models.DividendTransaction, { foreignKey: 'user_id' })
+    models.User.hasMany(models.DividendTransaction, { as: 'DividendUser', foreignKey: 'to_user_id' })
+    models.User.hasMany(models.InvestmentFundTransaction, { foreignKey: 'user_id' })
+    models.User.hasMany(models.InvestmentFundTransaction, { as: 'InvestmentUser', foreignKey: 'from_user_id' })
+    models.User.hasMany(models.PurchaseOrder, { foreignKey: 'user_id' })
+    models.User.hasMany(models.UtilityPayment, { foreignKey: 'user_id' })
   }
 
   return User
