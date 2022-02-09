@@ -46,6 +46,7 @@ module.exports = (sequelize, DataType) => {
 
   Board.associate = (models) => {
     models.Board.belongsTo(models.User, { foreignKey: 'user_id' })
+    models.Board.hasMany(models.BoardItemList, { foreignKey: 'board_id' })
   }
 
   return Board

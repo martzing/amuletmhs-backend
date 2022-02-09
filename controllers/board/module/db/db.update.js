@@ -1,46 +1,16 @@
 module.exports = ({ models }) => ({
-  updateTransferTransaction: async ({
-    id,
-    paymentTidUUID,
-    requestTid,
-    status,
-    errorMessage,
-    dbTxn,
-  }) => {
-    const _value = {
-      request_tid: requestTid,
-      payment_tid_uuid: paymentTidUUID,
-      status,
-      error_message: errorMessage,
-    }
-    const value = {}
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [k, v] of Object.entries(_value)) {
-      if (v !== undefined) {
-        value[k] = v
-      }
-    }
-
+  updateBoard: async ({ id, value, dbTxn }) => {
     const options = {
-      where: {
-        id,
-      },
+      where: { id },
+      transaction: dbTxn,
     }
-    if (dbTxn !== undefined) {
-      options.transaction = dbTxn
-    }
-
-    await models.TransferTransaction.update(value, options)
+    await models.Board.update(value, options)
   },
-  updateUser: async ({ id, value, dbTxn }) => {
+  updateBoardItemList: async ({ id, value, dbTxn }) => {
     const options = {
-      where: {
-        id,
-      },
+      where: { id },
+      transaction: dbTxn,
     }
-    if (dbTxn !== undefined) {
-      options.transaction = dbTxn
-    }
-    await models.User.update(value, options)
+    await models.BoardItemList.update(value, options)
   },
 })

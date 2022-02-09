@@ -1,18 +1,36 @@
 const Joi = require('joi')
 
 module.exports = {
+  getBoard: async (req) => {
+    const data = {
+      boardId: req.params.board_id,
+    }
+    const schema = Joi.object({
+      boardId: Joi.number().integer().positive().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
   getBoards: async (req) => {
     const data = {
+      offset: req.query.offset,
+      limit: req.query.limit,
       searchText: req.query.search_text,
     }
     const schema = Joi.object({
+      offset: Joi.number().integer().min(0).optional(),
+      limit: Joi.number().integer().positive().optional(),
       searchText: Joi.string().optional(),
     })
     const opts = {
       abortEarly: true,
       allowUnknown: false,
     }
-    const result = await schema.validate(data, opts)
+    const result = await schema.validateAsync(data, opts)
     return result
   },
   createBoard: async (req) => {
@@ -34,7 +52,66 @@ module.exports = {
       abortEarly: true,
       allowUnknown: false,
     }
-    const result = await schema.validate(data, opts)
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  updateBoard: async (req) => {
+    const data = {
+      boardId: req.body.board_id,
+      value: {},
+    }
+    if (req.body.name !== undefined) data.value.name = req.body.name
+    if (req.body.cost !== undefined) data.value.cost = req.body.cost
+    if (req.body.total_ticket !== undefined) data.value.total_ticket = req.body.total_ticket
+    if (req.body.ticket_price !== undefined) data.value.ticket_price = req.body.ticket_price
+    const schema = Joi.object({
+      boardId: Joi.number().integer().positive().required(),
+      value: Joi.object({
+        name: Joi.string().optional(),
+        cost: Joi.number().positive().optional(),
+        total_ticket: Joi.number().integer().positive().optional(),
+        ticket_price: Joi.number().integer().positive().optional(),
+      }),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  getBoardItemList: async (req) => {
+    const data = {
+      boardItemListId: req.params.board_item_list_id,
+    }
+    const schema = Joi.object({
+      boardItemListId: Joi.number().integer().positive().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  getBoardItemLists: async (req) => {
+    const data = {
+      boardId: req.query.board_id,
+      offset: req.query.offset,
+      limit: req.query.limit,
+      searchText: req.query.search_text,
+    }
+    const schema = Joi.object({
+      boardId: Joi.number().integer().positive().required(),
+      offset: Joi.number().integer().min(0).optional(),
+      limit: Joi.number().integer().positive().optional(),
+      searchText: Joi.string().optional(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
     return result
   },
   createBoardItemList: async (req) => {
@@ -56,7 +133,64 @@ module.exports = {
       abortEarly: true,
       allowUnknown: false,
     }
-    const result = await schema.validate(data, opts)
+    const result = await schema.validateAsync(data, opts)
     return result
-  }
+  },
+  updateBoardItemList: async (req) => {
+    const data = {
+      boardItemListId: req.body.board_item_list_id,
+      value: {},
+    }
+    if (req.body.customer_name !== undefined) data.value.customer_name = req.body.customer_name
+    if (req.body.sell_ticket_amount !== undefined) data.value.sell_ticket_amount = req.body.sell_ticket_amount
+    if (req.body.free_ticket_amount !== undefined) data.value.free_ticket_amount = req.body.free_ticket_amount
+    const schema = Joi.object({
+      boardItemListId: Joi.number().integer().positive().required(),
+      value: Joi.object({
+        customer_name: Joi.string().optional(),
+        sell_ticket_amount: Joi.number().integer().positive().optional(),
+        free_ticket_amount: Joi.number().integer().positive().optional(),
+      }),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  getRewardLists: async (req) => {
+    const data = {
+      boardItemListId: req.query.board_item_list_id,
+    }
+    const schema = Joi.object({
+      boardItemListId: Joi.number().integer().positive().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  createRewardList: async (req) => {
+    const data = {
+      board_item_list_id: req.body.board_item_list_id,
+      name: req.body.name,
+      type_id: req.body.type_id,
+      image: req.body.image,
+    }
+    const schema = Joi.object({
+      board_item_list_id: Joi.number().integer().positive().required(),
+      name: Joi.string().required(),
+      type_id: Joi.number().integer().positive().required(),
+      image: Joi.string().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
 }

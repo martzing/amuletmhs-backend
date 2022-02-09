@@ -42,7 +42,7 @@ module.exports = (sequelize, DataType) => {
 
   RewardList.associate = (models) => {
     models.RewardList.belongsTo(models.RewardType, { foreignKey: 'type_id' })
-    models.BoardItemList.belongsTo(models.Board, { foreignKey: 'board_item_list_id' })
+    models.RewardList.belongsTo(models.BoardItemList, { foreignKey: 'board_item_list_id' })
   }
 
   return RewardList
