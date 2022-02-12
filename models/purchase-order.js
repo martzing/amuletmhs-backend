@@ -48,6 +48,7 @@ module.exports = (sequelize, DataType) => {
 
   PurchaseOrder.associate = (models) => {
     models.PurchaseOrder.belongsTo(models.User, { foreignKey: 'user_id' })
+    models.PurchaseOrder.hasMany(models.PurchaseOrderList, { foreignKey: 'purchase_order_id' })
   }
 
   return PurchaseOrder
