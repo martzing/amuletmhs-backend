@@ -37,6 +37,11 @@ module.exports = [
     handler: adapter.createRewardListAdapter,
   },
   {
+    method: 'PATCH',
+    path: '/reward',
+    handler: adapter.updateRewardListAdapter,
+  },
+  {
     method: 'GET',
     path: '/reward',
     handler: adapter.getRewardListsAdapter,
@@ -50,5 +55,10 @@ module.exports = [
     method: 'GET',
     path: '/list/:board_item_list_id',
     handler: adapter.getBoardItemListAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/reward/:reward_list_id',
+    handler: adapter.getRewardListAdapter,
   },
 ]

@@ -99,4 +99,22 @@ module.exports = ({ models }) => ({
     const rewardList = await models.RewardList.findAll(options)
     return rewardList
   },
+  getRewardList: async ({
+    id,
+    isInclude = false,
+    dbTxn,
+  }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+    }
+    const include = [
+      {
+        model: models.RewardType,
+      },
+    ]
+    if (isInclude) options.include = include
+    const rewardList = await models.RewardList.findOne(options)
+    return rewardList
+  },
 })

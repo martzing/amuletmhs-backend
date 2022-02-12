@@ -13,4 +13,11 @@ module.exports = ({ models }) => ({
     }
     await models.BoardItemList.update(value, options)
   },
+  updateRewardList: async ({ id, value, dbTxn }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+    }
+    await models.RewardList.update(value, options)
+  },
 })

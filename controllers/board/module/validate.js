@@ -159,6 +159,20 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
+  getRewardList: async (req) => {
+    const data = {
+      rewardListId: req.params.reward_list_id,
+    }
+    const schema = Joi.object({
+      rewardListId: Joi.number().integer().positive().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
   getRewardLists: async (req) => {
     const data = {
       boardItemListId: req.query.board_item_list_id,
@@ -185,6 +199,29 @@ module.exports = {
       name: Joi.string().required(),
       type_id: Joi.number().integer().positive().required(),
       image: Joi.string().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  updateRewardList: async (req) => {
+    const data = {
+      rewardListId: req.body.reward_list_id,
+      value: {},
+    }
+    if (req.body.name !== undefined) data.value.name = req.body.name
+    if (req.body.type_id !== undefined) data.value.type_id = req.body.type_id
+    if (req.body.image !== undefined) data.value.image = req.body.image
+    const schema = Joi.object({
+      rewardListId: Joi.number().integer().positive().required(),
+      value: Joi.object({
+        name: Joi.string().optional(),
+        type_id: Joi.number().integer().positive().optional(),
+        image: Joi.string().optional(),
+      }),
     })
     const opts = {
       abortEarly: true,

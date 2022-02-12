@@ -109,6 +109,19 @@ module.exports = {
       return res.json({ msg: err.message })
     }
   },
+  getRewardListAdapter: async (req, res) => {
+    try {
+      const data = await validate.getRewardList(req)
+      const result = await ctrl.getRewardList({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
   getRewardListsAdapter: async (req, res) => {
     try {
       const data = await validate.getRewardLists(req)
@@ -126,6 +139,19 @@ module.exports = {
     try {
       const data = await validate.createRewardList(req)
       const result = await ctrl.createRewardList({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  updateRewardListAdapter: async (req, res) => {
+    try {
+      const data = await validate.updateRewardList(req)
+      const result = await ctrl.updateRewardList({
         func: { db, },
         data,
       })

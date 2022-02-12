@@ -175,6 +175,28 @@ module.exports = {
       throw err
     }
   },
+  getRewardList: async ({
+    func: { db },
+    data: {
+      rewardListId,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      const reward = await db.getRewardList({
+        id: rewardListId,
+        isInclude: true,
+        dbTxn,
+      })
+      if (!reward) throw new CustomError('Reward list not found.')
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return reward
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
   getRewardLists: async ({
     func: { db },
     data: {
@@ -205,6 +227,32 @@ module.exports = {
       const rewardList = await db.createRewardList({ value: data, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return rewardList
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  updateRewardList: async ({
+    func: { db },
+    data: {
+      rewardListId,
+      value,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      await db.updateRewardList({
+        id: rewardListId,
+        value,
+        dbTxn,
+      })
+      const reward = await db.getRewardList({
+        id: rewardListId,
+        dbTxn,
+      })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return reward
     } catch (err) {
       await db.rollbackTransaction({ dbTxn })
       throw err
