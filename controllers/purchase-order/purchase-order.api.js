@@ -96,4 +96,56 @@ module.exports = {
       return res.json({ msg: err.message })
     }
   },
+  getUtilityPaymentAdapter: async (req, res) => {
+    try {
+      const data = await validate.getUtilityPayment(req)
+      const result = await ctrl.getUtilityPayment({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  getUtilityPaymentsAdapter: async (req, res) => {
+    try {
+      const data = await validate.getUtilityPayments(req)
+      const result = await ctrl.getUtilityPayments({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  createUtilityPaymentAdapter: async (req, res) => {
+    try {
+      const data = await validate.createUtilityPayment(req)
+      const result = await ctrl.createUtilityPayment({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  updateUtilityPaymentAdapter: async (req, res) => {
+    try {
+      const data = await validate.updateUtilityPayment(req)
+      const result = await ctrl.updateUtilityPayment({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
 }

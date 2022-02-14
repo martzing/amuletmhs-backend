@@ -141,4 +141,83 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
+  getUtilityPayment: async (req) => {
+    const data = {
+      utilityPaymentId: req.params.utility_payment_id,
+    }
+    const schema = Joi.object({
+      utilityPaymentId: Joi.number().integer().positive().optional(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  getUtilityPayments: async (req) => {
+    const data = {
+      offset: req.query.offset,
+      limit: req.query.limit,
+      searchText: req.query.search_text,
+    }
+    const schema = Joi.object({
+      offset: Joi.number().integer().min(0).optional(),
+      limit: Joi.number().integer().positive().optional(),
+      searchText: Joi.string().optional(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  createUtilityPayment: async (req) => {
+    const data = {
+      user_id: req.get('x-user-id'),
+      name: req.body.name,
+      price: req.body.price,
+      bank_slip_image: req.body.bank_slip_image,
+      receipt_image: req.body.receipt_image,
+    }
+    const schema = Joi.object({
+      user_id: Joi.number().integer().positive().required(),
+      name: Joi.string().required(),
+      price: Joi.number().positive().required(),
+      bank_slip_image: Joi.string().optional(),
+      receipt_image: Joi.string().optional(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  updateUtilityPayment: async (req) => {
+    const data = {
+      utilityPaymentId: req.body.utility_payment_id,
+      value: {},
+    }
+    if (req.body.name !== undefined) data.value.name = req.body.name
+    if (req.body.price !== undefined) data.value.price = req.body.price
+    if (req.body.bank_slip_image !== undefined) data.value.bank_slip_image = req.body.bank_slip_image
+    if (req.body.receipt_image !== undefined) data.value.receipt_image = req.body.receipt_image
+    const schema = Joi.object({
+      utilityPaymentId: Joi.number().integer().positive().required(),
+      value: Joi.object({
+        name: Joi.string().optional(),
+        price: Joi.number().positive().optional(),
+        bank_slip_image: Joi.string().optional(),
+        receipt_image: Joi.string().optional(),
+      }),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
 }

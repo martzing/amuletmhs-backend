@@ -80,4 +80,49 @@ module.exports = ({ models }) => ({
     const pol = await models.PurchaseOrderList.findOne(options)
     return pol
   },
+  getUtilityPayments: async ({
+    offset,
+    limit,
+    searchText,
+    dbTxn,
+  }) => {
+    const { Op } = models
+    let where
+    const options = {
+      transaction: dbTxn,
+      include: [
+        {
+          model: models.User,
+        }
+      ],
+    }
+    if (searchText !== undefined) {
+      where = {
+        name: {
+          [Op.like]: `%${searchText}%`
+        }
+      }
+    }
+    if (where) options.where = where
+    if (offset !== undefined) options.offset = offset
+    if (limit !== undefined) options.limit = limit
+    const utilPayments = await models.UtilityPayment.findAll(options)
+    return utilPayments
+  },
+  getUtilityPayment: async ({
+    id,
+    dbTxn,
+  }) => {
+    const options = {
+      where: { id },
+      include: [
+        {
+          model: models.User,
+        }
+      ],
+      transaction: dbTxn,
+    }
+    const utilPayment = await models.UtilityPayment.findOne(options)
+    return utilPayment
+  },
 })

@@ -13,4 +13,11 @@ module.exports = ({ models }) => ({
     }
     await models.PurchaseOrderList.update(value, options)
   },
+  updateUtilityPayment: async ({ id, value, dbTxn }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+    }
+    await models.UtilityPayment.update(value, options)
+  },
 })

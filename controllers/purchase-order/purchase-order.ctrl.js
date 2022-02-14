@@ -142,4 +142,84 @@ module.exports = {
       throw err
     }
   },
+  getUtilityPayment: async ({
+    func: { db },
+    data: {
+      utilityPaymentId,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      const utilPayment = await db.getUtilityPayment({
+        id: utilityPaymentId,
+        dbTxn,
+      })
+      if (!utilPayment) throw new CustomError('Utility payment not found.')
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return utilPayment
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  getUtilityPayments: async ({
+    func: { db },
+    data: {
+      offset = 0,
+      limit = 10,
+      searchText,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      const utilPayments = await db.getUtilityPayments({
+        offset,
+        limit,
+        searchText,
+        dbTxn,
+      })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return utilPayments
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  createUtilityPayment: async ({
+    func: { db },
+    data,
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      console.log(data)
+      const utilPayment = await db.createUtilityPayment({ value: data, dbTxn })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return utilPayment
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  updateUtilityPayment: async ({
+    func: { db },
+    data: {
+      utilityPaymentId,
+      value,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      await db.updateUtilityPayment({ id: utilityPaymentId, value, dbTxn })
+      const utilPayment = await db.getUtilityPayment({ id: utilityPaymentId, dbTxn })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return utilPayment
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
 }

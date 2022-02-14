@@ -32,8 +32,28 @@ module.exports = [
     handler: adapter.getPurchaseOrderListsAdapter,
   },
   {
+    method: 'POST',
+    path: '/util-pay',
+    handler: adapter.createUtilityPaymentAdapter,
+  },
+  {
+    method: 'PATCH',
+    path: '/util-pay',
+    handler: adapter.updateUtilityPaymentAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/util-pay',
+    handler: adapter.getUtilityPaymentsAdapter,
+  },
+  {
     method: 'GET',
     path: '/:purchase_order_id',
     handler: adapter.getPurchaseOrderAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/util-pay/:utility_payment_id',
+    handler: adapter.getUtilityPaymentAdapter,
   },
 ]
