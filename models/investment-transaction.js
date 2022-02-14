@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataType) => {
-  const InvestmentFundTransaction = sequelize.define('InvestmentFundTransaction',
+  const InvestmentTransaction = sequelize.define('InvestmentTransaction',
     {
       id: {
         type: DataType.INTEGER,
@@ -38,17 +38,17 @@ module.exports = (sequelize, DataType) => {
       },
     },
     {
-      tableName: 'investment_fund_transaction',
+      tableName: 'investment_transaction',
       timestamps: true,
       createdAt: 'created_at',
       updatedAt: 'updated_at',
     }
   )
 
-  InvestmentFundTransaction.associate = (models) => {
-    models.InvestmentFundTransaction.belongsTo(models.User, { foreignKey: 'user_id' })
-    models.InvestmentFundTransaction.belongsTo(models.User, { as: 'FromUser', foreignKey: 'from_user_id' })
+  InvestmentTransaction.associate = (models) => {
+    models.InvestmentTransaction.belongsTo(models.User, { foreignKey: 'user_id' })
+    models.InvestmentTransaction.belongsTo(models.User, { as: 'FromUser', foreignKey: 'from_user_id' })
   }
 
-  return InvestmentFundTransaction
+  return InvestmentTransaction
 }
