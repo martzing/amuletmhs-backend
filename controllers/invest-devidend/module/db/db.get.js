@@ -55,4 +55,57 @@ module.exports = ({ models }) => ({
     const investTxns = await models.InvestmentTransaction.findAll(options)
     return investTxns
   },
+  getDividendTransaction: async ({
+    id,
+    dbTxn,
+  }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+      include: [
+        {
+          model: models.User,
+        },
+        {
+          model: models.User,
+          as: 'ToUser'
+        },
+      ],
+    }
+    const dividendTxn = await models.DividendTransaction.findOne(options)
+    return dividendTxn
+  },
+  getDividendTransactions: async ({
+    offset,
+    limit,
+    searchText,
+    dbTxn,
+  }) => {
+    const { Op } = models
+    let where
+    const options = {
+      transaction: dbTxn,
+      include: [
+        {
+          model: models.User,
+        },
+        {
+          model: models.User,
+          as: 'ToUser'
+        },
+      ],
+    }
+    if (searchText !== undefined) {
+      where = {
+        remark: {
+          [Op.like]: `%${searchText}%`
+        }
+      }
+    }
+    if (where) options.where = where
+    if (offset !== undefined) options.offset = offset
+    if (limit !== undefined) options.limit = limit
+    const dividendTxns = await models.DividendTransaction.findAll(options)
+    return dividendTxns
+  },
 })

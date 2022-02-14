@@ -57,4 +57,56 @@ module.exports = {
       return res.json({ msg: err.message })
     }
   },
+  getDividendTransactionAdapter: async (req, res) => {
+    try {
+      const data = await validate.getDividendTransaction(req)
+      const result = await ctrl.getDividendTransaction({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  getDividendTransactionsAdapter: async (req, res) => {
+    try {
+      const data = await validate.getDividendTransactions(req)
+      const result = await ctrl.getDividendTransactions({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  createDividendTransactionAdapter: async (req, res) => {
+    try {
+      const data = await validate.createDividendTransaction(req)
+      const result = await ctrl.createDividendTransaction({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  updateDividendTransactionAdapter: async (req, res) => {
+    try {
+      const data = await validate.updateDividendTransaction(req)
+      const result = await ctrl.updateDividendTransaction({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
 }

@@ -17,8 +17,28 @@ module.exports = [
     handler: adapter.getInvestmentTransactionsAdapter,
   },
   {
+    method: 'POST',
+    path: '/dividend',
+    handler: adapter.createDividendTransactionAdapter,
+  },
+  {
+    method: 'PATCH',
+    path: '/dividend',
+    handler: adapter.updateDividendTransactionAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/dividend',
+    handler: adapter.getDividendTransactionsAdapter,
+  },
+  {
     method: 'GET',
     path: '/invest/:investment_tid',
     handler: adapter.getInvestmentTransactionAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/dividend/:dividend_tid',
+    handler: adapter.getDividendTransactionAdapter,
   },
 ]

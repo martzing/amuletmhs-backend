@@ -13,4 +13,16 @@ module.exports = ({ models }) => ({
     const result = await models.InvestmentTransaction.create(value, options)
     return result
   },
+  createDividendTransaction: async ({
+    value,
+    dbTxn,
+  }) => {
+    const options = {}
+    if (dbTxn !== undefined) {
+      options.transaction = dbTxn
+    }
+
+    const result = await models.DividendTransaction.create(value, options)
+    return result
+  },
 })
