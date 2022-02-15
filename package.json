@@ -19,10 +19,13 @@
   },
   "homepage": "https://github.com/martzing/amuletmhs-backend#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.51.0",
+    "@aws-sdk/s3-request-presigner": "^3.51.0",
     "app-module-path": "^2.2.0",
     "body-parser": "^1.19.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "formidable": "^2.0.1",
     "got": "^12.0.1",
     "http": "^0.0.1-security",
     "joi": "^17.6.0",

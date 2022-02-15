@@ -20,4 +20,8 @@ module.exports = {
       logQueryParameters: true,
     },
   },
+  storage: {
+    region: process.env.STORAGE_REGION,
+    bucketName: process.env.STORAGE_BUCKET,
+  },
 }
