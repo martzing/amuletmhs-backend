@@ -33,19 +33,19 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createInvestmentTransaction: async (req) => {
+  createInvestmentTransaction: async ({ fields, files, req }) => {
     const data = {
       user_id: req.get('x-user-id'),
-      from_user_id: req.body.from_user_id,
-      amount: req.body.amount,
-      bank_slip_image: req.body.bank_slip_image,
-      remark: req.body.remark,
+      from_user_id: fields.from_user_id,
+      amount: fields.amount,
+      bank_slip_image: files.bank_slip_image,
     }
+    if (fields.remark !== undefined) data.remark = fields.remark
     const schema = Joi.object({
       user_id: Joi.number().integer().positive().required(),
       from_user_id: Joi.number().integer().positive().required(),
       amount: Joi.number().positive().required(),
-      bank_slip_image: Joi.string().required(),
+      bank_slip_image: Joi.object().required(),
       remark: Joi.string().optional(),
     })
     const opts = {
@@ -55,21 +55,23 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updateInvestmentTransaction: async (req) => {
+  updateInvestmentTransaction: async ({ fields, files, req }) => {
     const data = {
-      investmentTid: req.body.investment_tid,
+      userId: req.get('x-user-id'),
+      investmentTid: fields.investment_tid,
       value: {},
     }
-    if (req.body.from_user_id !== undefined) data.value.from_user_id = req.body.from_user_id
-    if (req.body.amount !== undefined) data.value.amount = req.body.amount
-    if (req.body.bank_slip_image !== undefined) data.value.bank_slip_image = req.body.bank_slip_image
-    if (req.body.remark !== undefined) data.value.remark = req.body.remark
+    if (fields.from_user_id !== undefined) data.value.from_user_id = fields.from_user_id
+    if (fields.amount !== undefined) data.value.amount = fields.amount
+    if (files.bank_slip_image !== undefined) data.value.bank_slip_image = files.bank_slip_image
+    if (fields.remark !== undefined) data.value.remark = fields.remark
     const schema = Joi.object({
+      userId: Joi.number().integer().positive().required(),
       investmentTid: Joi.number().integer().positive().required(),
       value: Joi.object({
         from_user_id: Joi.number().integer().positive().optional(),
         amount: Joi.number().positive().optional(),
-        bank_slip_image: Joi.string().optional(),
+        bank_slip_image: Joi.object().optional(),
         remark: Joi.string().optional(),
       }),
     })
@@ -112,19 +114,19 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createDividendTransaction: async (req) => {
+  createDividendTransaction: async ({ fields, files, req }) => {
     const data = {
       user_id: req.get('x-user-id'),
-      to_user_id: req.body.to_user_id,
-      amount: req.body.amount,
-      bank_slip_image: req.body.bank_slip_image,
-      remark: req.body.remark,
+      to_user_id: fields.to_user_id,
+      amount: fields.amount,
+      bank_slip_image: files.bank_slip_image,
     }
+    if (fields.remark !== undefined) data.remark = fields.remark
     const schema = Joi.object({
       user_id: Joi.number().integer().positive().required(),
       to_user_id: Joi.number().integer().positive().required(),
       amount: Joi.number().positive().required(),
-      bank_slip_image: Joi.string().required(),
+      bank_slip_image: Joi.object().required(),
       remark: Joi.string().optional(),
     })
     const opts = {
@@ -134,21 +136,23 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updateDividendTransaction: async (req) => {
+  updateDividendTransaction: async ({ fields, files, req }) => {
     const data = {
-      dividendTid: req.body.dividend_tid,
+      userId: req.get('x-user-id'),
+      dividendTid: fields.dividend_tid,
       value: {},
     }
-    if (req.body.to_user_id !== undefined) data.value.to_user_id = req.body.to_user_id
-    if (req.body.amount !== undefined) data.value.amount = req.body.amount
-    if (req.body.bank_slip_image !== undefined) data.value.bank_slip_image = req.body.bank_slip_image
-    if (req.body.remark !== undefined) data.value.remark = req.body.remark
+    if (fields.to_user_id !== undefined) data.value.to_user_id = fields.to_user_id
+    if (fields.amount !== undefined) data.value.amount = fields.amount
+    if (files.bank_slip_image !== undefined) data.value.bank_slip_image = files.bank_slip_image
+    if (fields.remark !== undefined) data.value.remark = fields.remark
     const schema = Joi.object({
+      userId: Joi.number().integer().positive().required(),
       dividendTid: Joi.number().integer().positive().required(),
       value: Joi.object({
         to_user_id: Joi.number().integer().positive().optional(),
         amount: Joi.number().positive().optional(),
-        bank_slip_image: Joi.string().optional(),
+        bank_slip_image: Joi.object().optional(),
         remark: Joi.string().optional(),
       }),
     })

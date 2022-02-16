@@ -1,7 +1,6 @@
-// const CustomError = require('helpers/custom-error')
+const CustomError = require('helpers/custom-error')
 const logger = require('helpers/logger')
-// const uuid = require('uuid')
-// const configs = require('configs')
+const configs = require('configs')
 
 module.exports = {
   getInvestmentTransaction: async ({
@@ -48,13 +47,23 @@ module.exports = {
     }
   },
   createInvestmentTransaction: async ({
-    func: { db },
+    func: { db, fs },
     data,
   }) => {
     let dbTxn
     try {
+      const _data = { ...data }
+      const uploadParams = {
+        file: data.bank_slip_image,
+        bucketPath: 'bank-slip',
+      }
+      const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+      if (status !== 'success') {
+        throw new CustomError('Upload file fail.')
+      } 
+      _data.bank_slip_image = filePath
       dbTxn = await db.beginTransaction({ dbTxn })
-      const investTxn = await db.createInvestmentTransaction({ value: data, dbTxn })
+      const investTxn = await db.createInvestmentTransaction({ value: _data, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return investTxn
     } catch (err) {
@@ -63,7 +72,7 @@ module.exports = {
     }
   },
   updateInvestmentTransaction: async ({
-    func: { db },
+    func: { db, fs },
     data: {
       investmentTid,
       value,
@@ -71,8 +80,24 @@ module.exports = {
   }) => {
     let dbTxn
     try {
+      const _value = { ...value }
+      if (value.bank_slip_image !== undefined) {
+        const uploadParams = {
+          file: value.bank_slip_image,
+          bucketPath: 'bank-slip',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _value.bank_slip_image = filePath
+      }
       dbTxn = await db.beginTransaction({ dbTxn })
-      await db.updateInvestmentTransaction({ id: investmentTid, value, dbTxn })
+      await db.updateInvestmentTransaction({
+        id: investmentTid,
+        value: _value,
+        dbTxn,
+      })
       const investTxn = await db.getInvestmentTransaction({ id: investmentTid, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return investTxn
@@ -125,13 +150,23 @@ module.exports = {
     }
   },
   createDividendTransaction: async ({
-    func: { db },
+    func: { db, fs },
     data,
   }) => {
     let dbTxn
     try {
+      const _data = { ...data }
+      const uploadParams = {
+        file: data.bank_slip_image,
+        bucketPath: 'bank-slip',
+      }
+      const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+      if (status !== 'success') {
+        throw new CustomError('Upload file fail.')
+      } 
+      _data.bank_slip_image = filePath
       dbTxn = await db.beginTransaction({ dbTxn })
-      const dividendTxn = await db.createDividendTransaction({ value: data, dbTxn })
+      const dividendTxn = await db.createDividendTransaction({ value: _data, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return dividendTxn
     } catch (err) {
@@ -140,7 +175,7 @@ module.exports = {
     }
   },
   updateDividendTransaction: async ({
-    func: { db },
+    func: { db, fs },
     data: {
       dividendTid,
       value,
@@ -148,8 +183,24 @@ module.exports = {
   }) => {
     let dbTxn
     try {
+      const _value = { ...value }
+      if (value.bank_slip_image !== undefined) {
+        const uploadParams = {
+          file: value.bank_slip_image,
+          bucketPath: 'bank-slip',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _value.bank_slip_image = filePath
+      }
       dbTxn = await db.beginTransaction({ dbTxn })
-      await db.updateDividendTransaction({ id: dividendTid, value, dbTxn })
+      await db.updateDividendTransaction({
+        id: dividendTid,
+        value: _value,
+        dbTxn,
+      })
       const dividendTxn = await db.getDividendTransaction({ id: dividendTid, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return dividendTxn

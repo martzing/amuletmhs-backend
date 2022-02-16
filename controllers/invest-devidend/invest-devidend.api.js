@@ -2,7 +2,8 @@ const logger = require('helpers/logger')
 const db = require('controllers/invest-devidend/module/db')
 const validate = require('controllers/invest-devidend/module/validate')
 const ctrl = require('controllers/invest-devidend/invest-devidend.ctrl')
-// const func = require('controllers/auth/auth.func')
+const fs = require('controllers/file-system/file-system.ctrl')
+const formParser = require('helpers/form-parser')
 
 module.exports = {
   getInvestmentTransactionAdapter: async (req, res) => {
@@ -33,9 +34,10 @@ module.exports = {
   },
   createInvestmentTransactionAdapter: async (req, res) => {
     try {
-      const data = await validate.createInvestmentTransaction(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createInvestmentTransaction({ fields, files, req })
       const result = await ctrl.createInvestmentTransaction({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -46,9 +48,10 @@ module.exports = {
   },
   updateInvestmentTransactiontionAdapter: async (req, res) => {
     try {
-      const data = await validate.updateInvestmentTransaction(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updateInvestmentTransaction({ fields, files, req })
       const result = await ctrl.updateInvestmentTransaction({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -85,9 +88,10 @@ module.exports = {
   },
   createDividendTransactionAdapter: async (req, res) => {
     try {
-      const data = await validate.createDividendTransaction(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createDividendTransaction({ fields, files, req })
       const result = await ctrl.createDividendTransaction({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -98,9 +102,10 @@ module.exports = {
   },
   updateDividendTransactionAdapter: async (req, res) => {
     try {
-      const data = await validate.updateDividendTransaction(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updateDividendTransaction({ fields, files, req })
       const result = await ctrl.updateDividendTransaction({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
