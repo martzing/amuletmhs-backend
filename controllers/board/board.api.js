@@ -2,6 +2,8 @@ const logger = require('helpers/logger')
 const db = require('controllers/board/module/db')
 const validate = require('controllers/board/module/validate')
 const ctrl = require('controllers/board/board.ctrl')
+const fs = require('controllers/file-system/file-system.ctrl')
+const formParser = require('helpers/form-parser')
 // const func = require('controllers/auth/auth.func')
 
 module.exports = {
@@ -153,6 +155,47 @@ module.exports = {
       const data = await validate.updateRewardList(req)
       const result = await ctrl.updateRewardList({
         func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  getRewardTypesAdapter: async (req, res) => {
+    try {
+      const data = await validate.getRewardTypes(req)
+      const result = await ctrl.getRewardTypes({
+        func: { db, },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  createRewardTypeAdapter: async (req, res) => {
+    try {
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createRewardType({ fields, files })
+      const result = await ctrl.createRewardType({
+        func: { db, fs },
+        data,
+      })
+      return res.json(result)
+    } catch (err) {
+      logger.error(err)
+      return res.json({ msg: err.message })
+    }
+  },
+  updateRewardTypeAdapter: async (req, res) => {
+    try {
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updateRewardType({ fields, files })
+      const result = await ctrl.updateRewardType({
+        func: { db, fs },
         data,
       })
       return res.json(result)

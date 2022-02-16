@@ -1,7 +1,7 @@
 const CustomError = require('helpers/custom-error')
 const logger = require('helpers/logger')
 // const uuid = require('uuid')
-// const configs = require('configs')
+const configs = require('configs')
 
 module.exports = {
   getBoard: async ({
@@ -253,6 +253,102 @@ module.exports = {
       })
       dbTxn = await db.commitTransaction({ dbTxn })
       return reward
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  createRewardType: async ({
+    func: { db, fs },
+    data: {
+      name,
+      image,
+    },
+  }) => {
+    let dbTxn
+    try {
+      const data = {
+        file: image,
+        bucketPath: 'reward',
+      }
+      const { status, file_path: filePath } = await fs.upload({ data })
+      if (status !== 'success') {
+        throw new CustomError('Upload file fail.')
+      } 
+      const value = {
+        name,
+        image: `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
+      }
+      dbTxn = await db.beginTransaction({ dbTxn })
+      const rewardType = await db.createRewardType({ value, dbTxn })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return rewardType
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  getRewardTypes: async ({
+    func: { db },
+    data: {
+      offset = 0,
+      limit = 10,
+      searchText,
+    },
+  }) => {
+    let dbTxn
+    try {
+      dbTxn = await db.beginTransaction({ dbTxn })
+      const rewardTypes = await db.getRewardTypes({
+        offset,
+        limit,
+        searchText,
+        dbTxn,
+      })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return rewardTypes
+    } catch (err) {
+      await db.rollbackTransaction({ dbTxn })
+      throw err
+    }
+  },
+  updateRewardType: async ({
+    func: { db, fs },
+    data: {
+      rewardTypeId,
+      value: {
+        name,
+        image,
+      },
+    },
+  }) => {
+    let dbTxn
+    try {
+      const value = {}
+      if (image !== undefined) {
+        const data = {
+          file: image,
+          bucketPath: 'reward',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        value.image = `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
+      }
+      if (name !== undefined) value.name = name
+      dbTxn = await db.beginTransaction({ dbTxn })
+      await db.updateRewardType({
+        id: rewardTypeId,
+        value,
+        dbTxn,
+      })
+      const rewardType = await db.getRewardType({
+        id: rewardTypeId,
+        dbTxn,
+      })
+      dbTxn = await db.commitTransaction({ dbTxn })
+      return rewardType
     } catch (err) {
       await db.rollbackTransaction({ dbTxn })
       throw err

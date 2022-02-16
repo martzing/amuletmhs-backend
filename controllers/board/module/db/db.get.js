@@ -117,4 +117,39 @@ module.exports = ({ models }) => ({
     const rewardList = await models.RewardList.findOne(options)
     return rewardList
   },
+  getRewardTypes: async ({
+    offset,
+    limit,
+    searchText,
+    dbTxn,
+  }) => {
+    const { Op } = models
+    let where
+    const options = {
+      transaction: dbTxn,
+    }
+    if (searchText !== undefined) {
+      where = {
+        name: {
+          [Op.like]: `%${searchText}%`
+        }
+      }
+    }
+    if (where) options.where = where
+    if (offset !== undefined) options.offset = offset
+    if (limit !== undefined) options.limit = limit
+    const rewardTypes = await models.RewardType.findAll(options)
+    return rewardTypes
+  },
+  getRewardType: async ({
+    id,
+    dbTxn,
+  }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+    }
+    const rewardType = await models.RewardType.findOne(options)
+    return rewardType
+  },
 })

@@ -20,4 +20,11 @@ module.exports = ({ models }) => ({
     }
     await models.RewardList.update(value, options)
   },
+  updateRewardType: async ({ id, value, dbTxn }) => {
+    const options = {
+      where: { id },
+      transaction: dbTxn,
+    }
+    await models.RewardType.update(value, options)
+  },
 })

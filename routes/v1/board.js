@@ -47,6 +47,21 @@ module.exports = [
     handler: adapter.getRewardListsAdapter,
   },
   {
+    method: 'POST',
+    path: '/reward/type',
+    handler: adapter.createRewardTypeAdapter,
+  },
+  {
+    method: 'PATCH',
+    path: '/reward/type',
+    handler: adapter.updateRewardTypeAdapter,
+  },
+  {
+    method: 'GET',
+    path: '/reward/type',
+    handler: adapter.getRewardTypesAdapter,
+  },
+  {
     method: 'GET',
     path: '/:board_id',
     handler: adapter.getBoardAdapter,

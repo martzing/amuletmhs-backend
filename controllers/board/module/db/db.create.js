@@ -37,4 +37,16 @@ module.exports = ({ models }) => ({
     const rewardList = await models.RewardList.create(value, options)
     return rewardList
   },
+  createRewardType: async ({
+    value,
+    dbTxn,
+  }) => {
+    const options = {}
+    if (dbTxn !== undefined) {
+      options.transaction = dbTxn
+    }
+
+    const rewardType = await models.RewardType.create(value, options)
+    return rewardType
+  },
 })

@@ -230,4 +230,59 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
+  getRewardTypes: async (req) => {
+    const data = {
+      offset: req.query.offset,
+      limit: req.query.limit,
+      searchText: req.query.search_text,
+    }
+    const schema = Joi.object({
+      offset: Joi.number().integer().min(0).optional(),
+      limit: Joi.number().integer().positive().optional(),
+      searchText: Joi.string().optional(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  createRewardType: async ({ fields, files }) => {
+    const data = {
+      name: fields.name,
+      image: files.image,
+    }
+    const schema = Joi.object({
+      name: Joi.string().required(),
+      image: Joi.object().required(),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
+  updateRewardType: async ({ fields, files }) => {
+    const data = {
+      rewardTypeId: fields.reward_type_id,
+      value: {},
+    }
+    if (fields.name !== undefined) data.value.name = fields.name
+    if (files.image !== undefined) data.value.image = files.image
+    const schema = Joi.object({
+      rewardTypeId: Joi.number().integer().positive().required(),
+      value: Joi.object({
+        name: Joi.string().optional(),
+        image: Joi.object().optional(),
+      }),
+    })
+    const opts = {
+      abortEarly: true,
+      allowUnknown: false,
+    }
+    const result = await schema.validateAsync(data, opts)
+    return result
+  },
 }

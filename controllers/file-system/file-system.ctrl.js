@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { storage } = require('configs')
-const { S3Client, ListBucketsCommand, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 const uuid = require('uuid')
 
@@ -33,6 +33,7 @@ module.exports = {
       result = {
         status: 'success',
         file_path: filePath,
+        bucket_path: bucketPath,
       }
     } else {
       result = { status: 'fail' }
