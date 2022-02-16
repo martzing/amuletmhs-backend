@@ -257,14 +257,36 @@ module.exports = {
     }
   },
   createUtilityPayment: async ({
-    func: { db },
+    func: { db, fs },
     data,
   }) => {
     let dbTxn
     try {
+      const _data = { ...data }
+        if (data.bank_slip_image !== undefined) {
+        const uploadParams = {
+          file: data.bank_slip_image,
+          bucketPath: 'bank-slip',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _data.bank_slip_image = filePath
+      }
+      if (data.receipt_image !== undefined) {
+        const uploadParams = {
+          file: data.receipt_image,
+          bucketPath: 'receipt',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _data.receipt_image = `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
+      }
       dbTxn = await db.beginTransaction({ dbTxn })
-      console.log(data)
-      const utilPayment = await db.createUtilityPayment({ value: data, dbTxn })
+      const utilPayment = await db.createUtilityPayment({ value: _data, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return utilPayment
     } catch (err) {
@@ -273,7 +295,7 @@ module.exports = {
     }
   },
   updateUtilityPayment: async ({
-    func: { db },
+    func: { db, fs },
     data: {
       utilityPaymentId,
       value,
@@ -281,8 +303,31 @@ module.exports = {
   }) => {
     let dbTxn
     try {
+      const _value = { ...value }
+      if (value.bank_slip_image !== undefined) {
+        const uploadParams = {
+          file: value.bank_slip_image,
+          bucketPath: 'bank-slip',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _value.bank_slip_image = filePath
+      }
+      if (value.receipt_image !== undefined) {
+        const uploadParams = {
+          file: value.receipt_image,
+          bucketPath: 'receipt',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _value.receipt_image = `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
+      }
       dbTxn = await db.beginTransaction({ dbTxn })
-      await db.updateUtilityPayment({ id: utilityPaymentId, value, dbTxn })
+      await db.updateUtilityPayment({ id: utilityPaymentId, value: _value, dbTxn })
       const utilPayment = await db.getUtilityPayment({ id: utilityPaymentId, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return utilPayment

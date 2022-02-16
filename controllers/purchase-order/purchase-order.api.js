@@ -130,9 +130,10 @@ module.exports = {
   },
   createUtilityPaymentAdapter: async (req, res) => {
     try {
-      const data = await validate.createUtilityPayment(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createUtilityPayment({ fields, files, req })
       const result = await ctrl.createUtilityPayment({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -143,9 +144,10 @@ module.exports = {
   },
   updateUtilityPaymentAdapter: async (req, res) => {
     try {
-      const data = await validate.updateUtilityPayment(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updateUtilityPayment({ fields, files, req })
       const result = await ctrl.updateUtilityPayment({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)

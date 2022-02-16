@@ -175,20 +175,20 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createUtilityPayment: async (req) => {
+  createUtilityPayment: async ({ fields, files, req }) => {
     const data = {
       user_id: req.get('x-user-id'),
-      name: req.body.name,
-      price: req.body.price,
-      bank_slip_image: req.body.bank_slip_image,
-      receipt_image: req.body.receipt_image,
+      name: fields.name,
+      price: fields.price,
     }
+    if (files.bank_slip_image !== undefined) data.bank_slip_image = files.bank_slip_image
+    if (files.receipt_image !== undefined) data.receipt_image = files.receipt_image
     const schema = Joi.object({
       user_id: Joi.number().integer().positive().required(),
       name: Joi.string().required(),
       price: Joi.number().positive().required(),
-      bank_slip_image: Joi.string().optional(),
-      receipt_image: Joi.string().optional(),
+      bank_slip_image: Joi.object().optional(),
+      receipt_image: Joi.object().optional(),
     })
     const opts = {
       abortEarly: true,
@@ -197,22 +197,24 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updateUtilityPayment: async (req) => {
+  updateUtilityPayment: async ({ fields, files, req }) => {
     const data = {
-      utilityPaymentId: req.body.utility_payment_id,
+      user_id: req.get('x-user-id'),
+      utilityPaymentId: fields.utility_payment_id,
       value: {},
     }
-    if (req.body.name !== undefined) data.value.name = req.body.name
-    if (req.body.price !== undefined) data.value.price = req.body.price
-    if (req.body.bank_slip_image !== undefined) data.value.bank_slip_image = req.body.bank_slip_image
-    if (req.body.receipt_image !== undefined) data.value.receipt_image = req.body.receipt_image
+    if (fields.name !== undefined) data.value.name = fields.name
+    if (fields.price !== undefined) data.value.price = fields.price
+    if (files.bank_slip_image !== undefined) data.value.bank_slip_image = files.bank_slip_image
+    if (files.receipt_image !== undefined) data.value.receipt_image = files.receipt_image
     const schema = Joi.object({
+      user_id: Joi.number().integer().positive().required(),
       utilityPaymentId: Joi.number().integer().positive().required(),
       value: Joi.object({
         name: Joi.string().optional(),
         price: Joi.number().positive().optional(),
-        bank_slip_image: Joi.string().optional(),
-        receipt_image: Joi.string().optional(),
+        bank_slip_image: Joi.object().optional(),
+        receipt_image: Joi.object().optional(),
       }),
     })
     const opts = {
