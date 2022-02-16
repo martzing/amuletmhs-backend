@@ -139,9 +139,10 @@ module.exports = {
   },
   createRewardListAdapter: async (req, res) => {
     try {
-      const data = await validate.createRewardList(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createRewardList({ fields, files })
       const result = await ctrl.createRewardList({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -152,9 +153,10 @@ module.exports = {
   },
   updateRewardListAdapter: async (req, res) => {
     try {
-      const data = await validate.updateRewardList(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updateRewardList({ fields, files })
       const result = await ctrl.updateRewardList({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)

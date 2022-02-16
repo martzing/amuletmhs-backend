@@ -187,18 +187,18 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createRewardList: async (req) => {
+  createRewardList: async ({ fields, files }) => {
     const data = {
-      board_item_list_id: req.body.board_item_list_id,
-      name: req.body.name,
-      type_id: req.body.type_id,
-      image: req.body.image,
+      board_item_list_id: fields.board_item_list_id,
+      name: fields.name,
+      type_id: fields.type_id,
+      image: files.image,
     }
     const schema = Joi.object({
       board_item_list_id: Joi.number().integer().positive().required(),
       name: Joi.string().required(),
       type_id: Joi.number().integer().positive().required(),
-      image: Joi.string().required(),
+      image: Joi.object().required(),
     })
     const opts = {
       abortEarly: true,
@@ -207,20 +207,20 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updateRewardList: async (req) => {
+  updateRewardList: async ({ fields, files }) => {
     const data = {
-      rewardListId: req.body.reward_list_id,
+      rewardListId: fields.reward_list_id,
       value: {},
     }
-    if (req.body.name !== undefined) data.value.name = req.body.name
-    if (req.body.type_id !== undefined) data.value.type_id = req.body.type_id
-    if (req.body.image !== undefined) data.value.image = req.body.image
+    if (fields.name !== undefined) data.value.name = fields.name
+    if (fields.type_id !== undefined) data.value.type_id = fields.type_id
+    if (files.image !== undefined) data.value.image = files.image
     const schema = Joi.object({
       rewardListId: Joi.number().integer().positive().required(),
       value: Joi.object({
         name: Joi.string().optional(),
         type_id: Joi.number().integer().positive().optional(),
-        image: Joi.string().optional(),
+        image: Joi.object().optional(),
       }),
     })
     const opts = {

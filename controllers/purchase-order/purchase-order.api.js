@@ -2,6 +2,8 @@ const logger = require('helpers/logger')
 const db = require('controllers/purchase-order/module/db')
 const validate = require('controllers/purchase-order/module/validate')
 const ctrl = require('controllers/purchase-order/purchase-order.ctrl')
+const fs = require('controllers/file-system/file-system.ctrl')
+const formParser = require('helpers/form-parser')
 // const func = require('controllers/auth/auth.func')
 
 module.exports = {
@@ -33,9 +35,10 @@ module.exports = {
   },
   createPurchaseOrderAdapter: async (req, res) => {
     try {
-      const data = await validate.createPurchaseOrder(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createPurchaseOrder({ fields, files, req })
       const result = await ctrl.createPurchaseOrder({
-        func: { db, },
+        func: { db,fs },
         data,
       })
       return res.json(result)
@@ -46,9 +49,10 @@ module.exports = {
   },
   updatePurchaseOrderAdapter: async (req, res) => {
     try {
-      const data = await validate.updatePurchaseOrder(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updatePurchaseOrder({ fields, files, req })
       const result = await ctrl.updatePurchaseOrder({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -72,9 +76,10 @@ module.exports = {
   },
   createPurchaseOrderListAdapter: async (req, res) => {
     try {
-      const data = await validate.createPurchaseOrderList(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.createPurchaseOrderList({ fields, files })
       const result = await ctrl.createPurchaseOrderList({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)
@@ -85,9 +90,10 @@ module.exports = {
   },
   updatePurchaseOrderListAdapter: async (req, res) => {
     try {
-      const data = await validate.updatePurchaseOrderList(req)
+      const { fields, files } = await formParser.parse(req)
+      const data = await validate.updatePurchaseOrderList({ fields, files })
       const result = await ctrl.updatePurchaseOrderList({
-        func: { db, },
+        func: { db, fs },
         data,
       })
       return res.json(result)

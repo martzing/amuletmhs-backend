@@ -1,6 +1,5 @@
 const CustomError = require('helpers/custom-error')
 const logger = require('helpers/logger')
-// const uuid = require('uuid')
 const configs = require('configs')
 
 module.exports = {
@@ -218,13 +217,23 @@ module.exports = {
     }
   },
   createRewardList: async ({
-    func: { db },
+    func: { db, fs },
     data,
   }) => {
     let dbTxn
     try {
+      const _data = { ...data }
+      const uploadParams = {
+        file: data.image,
+        bucketPath: 'reward',
+      }
+      const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+      if (status !== 'success') {
+        throw new CustomError('Upload file fail.')
+      } 
+      _data.image = `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
       dbTxn = await db.beginTransaction({ dbTxn })
-      const rewardList = await db.createRewardList({ value: data, dbTxn })
+      const rewardList = await db.createRewardList({ value: _data, dbTxn })
       dbTxn = await db.commitTransaction({ dbTxn })
       return rewardList
     } catch (err) {
@@ -233,7 +242,7 @@ module.exports = {
     }
   },
   updateRewardList: async ({
-    func: { db },
+    func: { db, fs },
     data: {
       rewardListId,
       value,
@@ -241,10 +250,22 @@ module.exports = {
   }) => {
     let dbTxn
     try {
+      const _value = { ...value }
+      if (value.image !== undefined) {
+        const uploadParams = {
+          file: value.image,
+          bucketPath: 'reward',
+        }
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
+        if (status !== 'success') {
+          throw new CustomError('Upload file fail.')
+        } 
+        _value.image = `${configs.baseUrl}/v1/file-system/download?key=${filePath}`
+      }
       dbTxn = await db.beginTransaction({ dbTxn })
       await db.updateRewardList({
         id: rewardListId,
-        value,
+        value: _value,
         dbTxn,
       })
       const reward = await db.getRewardList({
@@ -267,11 +288,11 @@ module.exports = {
   }) => {
     let dbTxn
     try {
-      const data = {
+      const uploadParams = {
         file: image,
         bucketPath: 'reward',
       }
-      const { status, file_path: filePath } = await fs.upload({ data })
+      const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
       if (status !== 'success') {
         throw new CustomError('Upload file fail.')
       } 
@@ -326,11 +347,11 @@ module.exports = {
     try {
       const value = {}
       if (image !== undefined) {
-        const data = {
+        const uploadParams = {
           file: image,
           bucketPath: 'reward',
         }
-        const { status, file_path: filePath } = await fs.upload({ data })
+        const { status, file_path: filePath } = await fs.upload({ data: uploadParams })
         if (status !== 'success') {
           throw new CustomError('Upload file fail.')
         } 

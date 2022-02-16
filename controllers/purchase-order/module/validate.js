@@ -33,20 +33,20 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createPurchaseOrder: async (req) => {
+  createPurchaseOrder: async ({ fields, files, req }) => {
     const data = {
       user_id: req.get('x-user-id'),
-      supplier_name: req.body.supplier_name,
-      total_price: req.body.total_price,
-      bank_slip_image: req.body.bank_slip_image,
-      receipt_image: req.body.receipt_image,
+      supplier_name: fields.supplier_name,
+      total_price: fields.total_price,
+      bank_slip_image: files.bank_slip_image,
     }
+    if (files.receipt_image !== undefined) data.receipt_image = files.receipt_image
     const schema = Joi.object({
       user_id: Joi.number().integer().positive().required(),
       supplier_name: Joi.string().required(),
       total_price: Joi.number().positive().required(),
-      bank_slip_image: Joi.string().optional(),
-      receipt_image: Joi.string().optional(),
+      bank_slip_image: Joi.object().required(),
+      receipt_image: Joi.object().optional(),
     })
     const opts = {
       abortEarly: true,
@@ -55,22 +55,24 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updatePurchaseOrder: async (req) => {
+  updatePurchaseOrder: async ({ fields, files, req }) => {
     const data = {
-      purchaseOrderId: req.body.purchase_order_id,
+      user_id: req.get('x-user-id'),
+      purchaseOrderId: fields.purchase_order_id,
       value: {},
     }
-    if (req.body.supplier_name !== undefined) data.value.supplier_name = req.body.supplier_name
-    if (req.body.total_price !== undefined) data.value.total_price = req.body.total_price
-    if (req.body.bank_slip_image !== undefined) data.value.bank_slip_image = req.body.bank_slip_image
-    if (req.body.receipt_image !== undefined) data.value.receipt_image = req.body.receipt_image
+    if (fields.supplier_name !== undefined) data.value.supplier_name = fields.supplier_name
+    if (fields.total_price !== undefined) data.value.total_price = fields.total_price
+    if (files.bank_slip_image !== undefined) data.value.bank_slip_image = files.bank_slip_image
+    if (files.receipt_image !== undefined) data.value.receipt_image = files.receipt_image
     const schema = Joi.object({
+      user_id: Joi.number().integer().positive().required(),
       purchaseOrderId: Joi.number().integer().positive().required(),
       value: Joi.object({
         supplier_name: Joi.string().optional(),
         total_price: Joi.number().positive().optional(),
-        bank_slip_image: Joi.string().optional(),
-        receipt_image: Joi.string().optional(),
+        bank_slip_image: Joi.object().optional(),
+        receipt_image: Joi.object().optional(),
       }),
     })
     const opts = {
@@ -94,20 +96,20 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  createPurchaseOrderList: async (req) => {
+  createPurchaseOrderList: async ({ fields, files }) => {
     const data = {
-      purchase_order_id: req.body.purchase_order_id,
-      reward_type_id: req.body.reward_type_id,
-      quantity: req.body.quantity,
-      price_per_unit: req.body.price_per_unit,
-      image: req.body.image,
+      purchase_order_id: fields.purchase_order_id,
+      reward_type_id: fields.reward_type_id,
+      quantity: fields.quantity,
+      price_per_unit: fields.price_per_unit,
+      image: files.image,
     }
     const schema = Joi.object({
       purchase_order_id: Joi.number().integer().positive().required(),
       reward_type_id: Joi.number().integer().positive().required(),
       quantity: Joi.number().integer().positive().required(),
       price_per_unit: Joi.number().positive().required(),
-      image: Joi.string().optional(),
+      image: Joi.object().optional(),
     })
     const opts = {
       abortEarly: true,
@@ -116,22 +118,22 @@ module.exports = {
     const result = await schema.validateAsync(data, opts)
     return result
   },
-  updatePurchaseOrderList: async (req) => {
+  updatePurchaseOrderList: async ({ fields, files }) => {
     const data = {
-      purchaseOrderListId: req.body.purchase_order_list_id,
+      purchaseOrderListId: fields.purchase_order_list_id,
       value: {},
     }
-    if (req.body.reward_type_id !== undefined) data.value.reward_type_id = req.body.reward_type_id
-    if (req.body.quantity !== undefined) data.value.quantity = req.body.quantity
-    if (req.body.price_per_unit !== undefined) data.value.price_per_unit = req.body.price_per_unit
-    if (req.body.image !== undefined) data.value.image = req.body.image
+    if (fields.reward_type_id !== undefined) data.value.reward_type_id = fields.reward_type_id
+    if (fields.quantity !== undefined) data.value.quantity = fields.quantity
+    if (fields.price_per_unit !== undefined) data.value.price_per_unit = fields.price_per_unit
+    if (files.image !== undefined) data.value.image = files.image
     const schema = Joi.object({
       purchaseOrderListId: Joi.number().integer().positive().required(),
       value: Joi.object({
         reward_type_id: Joi.number().integer().positive().optional(),
         quantity: Joi.number().integer().positive().optional(),
         price_per_unit: Joi.number().positive().optional(),
-        image: Joi.string().optional(),
+        image: Joi.object().optional(),
       }),
     })
     const opts = {
