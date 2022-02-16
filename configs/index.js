@@ -1,5 +1,7 @@
 module.exports = {
   baseUrl: process.env.BASE_URL,
+  salt: process.env.SALT,
+  jwtSecret: process.env.JWT_SECRET,
   db: {
     dbName: process.env.MARIADB_DBNAME,
     username: process.env.MARIADB_USER,

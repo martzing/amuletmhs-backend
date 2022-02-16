@@ -104,3 +104,6 @@ dist
 .tern-port
 
 img.html
+private.key
+CSR.csr
+base64.key
